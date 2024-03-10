@@ -7,14 +7,17 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.security.Principal;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.apache.tomcat.util.log.UserDataHelper.Mode;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -23,20 +26,25 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.smart.dao.ContactRepositiry;
+import com.smart.dao.MyOrderRepositiry;
 import com.smart.dao.UserRepository;
 import com.smart.entities.Contact;
+import com.smart.entities.MyOrder;
 import com.smart.entities.User;
 import com.smart.helper.Message;
 
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import static org.springframework.http.MediaType.MULTIPART_FORM_DATA_VALUE;
+import com.razorpay.*;
 
 @Controller
 @RequestMapping("/user")
@@ -50,6 +58,9 @@ public class UserController {
 	
 	@Autowired
 	private ContactRepositiry contactRepositiry;
+	
+	@Autowired
+	private MyOrderRepositiry myOrderRepositiry;
 
 	// adding common data
 	@ModelAttribute
@@ -320,6 +331,54 @@ public class UserController {
 		
 		return "redirect:/user/index";
 	}
+	
+	//creating order for payment
+	@PostMapping("/create_order")
+	@ResponseBody
+	public String createOrder(@RequestBody Map<String, Object> data,Principal principal) throws RazorpayException {
+		System.out.println("Hii order created.."+data);
+		int amt=Integer.parseInt(data.get("amount").toString());
+		var client=new RazorpayClient("rzp_test_eYHbxIlEE9T9Ut","MXY9MntCOwo3cBmuJ9pPWdHB");
+		
+		JSONObject ob=new JSONObject();
+		ob.put("amount", amt*100);
+		ob.put("currency", "INR");
+		ob.put("receipt", "txn_235425");
+		
+		//creating new order
+		
+		Order order = client.orders.create(ob);
+		System.out.println(order);
+		
+		//save the order in database
+		
+		MyOrder myOrder = new MyOrder();
+		myOrder.setAmount(order.get("amount")+"");
+		myOrder.setOrderId(order.get("id"));
+		myOrder.setPaymentId(null);
+		myOrder.setStatus("created");
+		myOrder.setUser(this.userRepositry.getUserByUserName(principal.getName()));
+	    myOrder.setRecepit(order.get("recepit"));
+	    
+	    this.myOrderRepositiry.save(myOrder);
+	    
+		
+		//if you want to save data in your database
+		
+		return order.toString();
+	}
 
+	@PostMapping("/update_order")
+	public ResponseEntity<?> updateOrder(@RequestBody Map<String, Object> data){
+		
+		MyOrder myOrder = this.myOrderRepositiry.findByOrderId(data.get("order_id").toString());
+		myOrder.setPaymentId(data.get("payment_id").toString());
+		myOrder.setStatus(data.get("status").toString());
+		
+		this.myOrderRepositiry.save(myOrder);
+		
+		System.out.println(data);
+		return ResponseEntity.ok(Map.of("msg","updated"));
+	}
 	
 }

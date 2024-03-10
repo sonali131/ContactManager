@@ -4,6 +4,7 @@ th:replace="normal/base::layout(~{::section})">
 <head>
 	<meta charset="UTF-8" />
 	<title>About</title>
+	<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 </head>
 <body>
 	<section>
@@ -21,6 +22,15 @@ th:replace="normal/base::layout(~{::section})">
 						</h1>
 						
 						<a th:href="@{/user/addcontact}" class="btn btn-primary btn-block mt-4">ADD NEW CONTACT</a>
+						
+						<hr />
+						
+						<h3 class="my-3">Donate us</h3>
+						<input id="paymentId" type="text" class="form-control my-2" placeholder="Enter amount here" />
+						
+						<div class="container text-center mt-3">
+							<button th:onclick="paymentStart()" class="btn btn-success btn-block">PAY</button>
+						</div>
 						
 				</div>
 			</div>
