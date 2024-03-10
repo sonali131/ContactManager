@@ -18,12 +18,20 @@
 	<link rel="stylesheet" th:href="@{/css/style.css}" />
 
 	<title th:text="${title}">Base html</title>
+<<<<<<< HEAD
 
+=======
+	
+>>>>>>> 35a05ef976c3c85ceaca1706f64da238955d23d6
 	<!-- jQuery first, then Popper.js, then Bootstrap JS -->
 	<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
 		integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
 		crossorigin="anonymous"></script>
+<<<<<<< HEAD
 
+=======
+	
+>>>>>>> 35a05ef976c3c85ceaca1706f64da238955d23d6
 </head>
 
 <body>
@@ -67,6 +75,7 @@
 
 		<span onclick="toggleSidebar()" class="crossBtn">&times;</span>
 
+<<<<<<< HEAD
 		<a id="home-link" href="#" th:href="@{/user/index}" class="item active "> <i class="fa-solid fa-house"></i>
 			Home</a>
 		<a id="contacts-link" href="#" th:href="@{/user/show-contacts/0}" class="item"> <i
@@ -78,6 +87,14 @@
 			Profile</a>
 		<a id="setting-link" href="#" th:href="@{/user/settings}" class="item"> <i class="fa-solid fa-gear"></i>
 			Settings</a>
+=======
+		<a id="home-link" href="#" th:href="@{/user/index}" class="item active "> <i class="fa-solid fa-house"></i> Home</a>
+		<a id="contacts-link" href="#" th:href="@{/user/show-contacts/0}" class="item"> <i class="fa-solid fa-id-card"></i> View
+			Contacts</a>
+		<a id="add-link" href="#" th:href="@{/user/addcontact}" class="item"> <i class="fas fa-pencil-alt"></i> Add Contact</a>
+		<a id="profile-link" href="#" th:href="@{/user/profile}" class="item"> <i class="fas fa-user-circle"></i> Your Profile</a>
+		<a id="setting-link" href="#" th:href="@{/user/settings}" class="item"> <i class="fa-solid fa-gear"></i> Settings</a>
+>>>>>>> 35a05ef976c3c85ceaca1706f64da238955d23d6
 		<a id="logout-link" href="#" th:href="@{/logout}" class="item"> <i class="fas fa-sign-out-alt"></i> Logout</a>
 		<div class="divider"></div>
 	</div>
@@ -103,7 +120,11 @@
 	<!-- END Content area-->
 
 	<!-- Optional JavaScript -->
+<<<<<<< HEAD
 
+=======
+	
+>>>>>>> 35a05ef976c3c85ceaca1706f64da238955d23d6
 	<script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js"
 		integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
 		crossorigin="anonymous"></script>
@@ -113,6 +134,7 @@
 
 	<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 
+<<<<<<< HEAD
 	<script>
 		function deleteContact(cid) {
 			swal({
@@ -134,6 +156,28 @@
 	</script>
 	<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 	<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+=======
+<script>
+	function deleteContact(cid){
+		swal({
+  title: "Are you sure?",
+  text: "You want to delete this contact..!",
+  icon: "warning",
+  buttons: true,
+  dangerMode: true,
+})
+.then((willDelete) => {
+  if (willDelete) {
+    window.location="user/delete/"+cid;
+  } else {
+    swal("Your contact is safe!");
+  }
+});
+
+	}
+</script>
+
+>>>>>>> 35a05ef976c3c85ceaca1706f64da238955d23d6
 	<script th:src="@{/js/script.js}"></script>
 </body>
 
